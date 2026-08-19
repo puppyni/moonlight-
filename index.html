@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 길드전 꽃 미션 호출 도우미</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --accent-color: #495057;
+            --point-30: #e63946;
+            --point-28: #f77f00;
+            --point-25: #fcbf49;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+        /* 검색창 */
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: #4dabf7;
+        }
+
+        /* 필터 버튼 */
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: #343a40;
+            color: white;
+            border-color: #343a40;
+        }
+
+        /* 리스트 구조 */
+        .mission-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mission-card {
+            background: var(--card-bg);
+            border-left: 6px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 점수별 테두리 색상 변화 */
+        .card-30 { border-left-color: var(--point-30); }
+        .card-28 { border-left-color: var(--point-28); }
+        .card-25 { border-left-color: var(--point-25); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mission-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .mission-score {
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e9ecef;
+            font-weight: bold;
+        }
+
+        .score-30 { background: #ffe3e3; color: var(--point-30); }
+        .score-28 { background: #fff4e6; color: var(--point-28); }
+        .score-25 { background: #fff9db; color: var(--point-25); }
+
+        .guild-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .member-badge {
+            background: #f1f3f5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .no-member {
+            color: #adb5bd;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌸 길드전 꽃 미션 호출기</h1>
+    
+    <!-- 검색 기능 -->
+    <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 일부나 미션명 검색 (예: 장미, 모란)..." onkeyup="filterMissions()">
+    
+    <!-- 점수 필터 버튼 -->
+    <div class="filter-buttons">
+        <button class="filter-btn active" onclick="filterScore('all', this)">전체</button>
+        <button class="filter-btn" onclick="filterScore('30', this)">30점</button>
+        <button class="filter-btn" onclick="filterScore('28', this)">28점</button>
+        <button class="filter-btn" onclick="filterScore('25', this)">25점</button>
+    </div>
+
+    <!-- 미션 리스트 -->
+    <div id="missionList" class="mission-list"></div>
+</div>
+
+<script>
+    // 꽃 세부 이름까지 모두 분리 및 매핑 완료된 데이터
+    const data = [
+        // 30점 항목
+        { name: "동화의 성", score: 30, members: ["멍냥", "젤리"] },
+        { name: "사슴", score: 30, members: ["젤리", "무어올리에"] },
+        { name: "꽃나무", score: 30, members: ["이드리즈", "멍냥"] },
+
+        // 28점 항목
+        { name: "달토끼", score: 28, members: ["무어올리에"] },
+        { name: "쌍둥이자리", score: 28, members: ["티티", "무어올리에"] },
+        { name: "게자리", score: 28, members: ["티티", "무어올리에"] },
+        { name: "사자자리", score: 28, members: ["티티", "무어올리에", "방글", "초록", "방울이"] },
+        { name: "별의마녀", score: 28, members: [] },
+        { name: "여름마녀", score: 28, members: ["꽃소담", "방글", "무어올리에"] },
+        { name: "꽃소담 (브릴블리스)", score: 28, members: ["꽃소담"] },
+        { name: "방글 (브릴블리스)", score: 28, members: ["방글"] },
+        { name: "꽃무늬배", score: 28, members: ["꽃소담", "방글", "무어올리에", "제시"] },
+        { name: "구름빛사절", score: 28, members: ["은짱", "초록", "밀로", "임솔", "방울이"] },
+        { name: "음파", score: 28, members: ["진쫀", "방울이"] },
+        { name: "수정서리", score: 28, members: ["꽃소담", "햄찌네", "데이지", "티티", "방울이"] },
+        { name: "별똥별", score: 28, members: ["데이지", "포포", "시아아아", "초록"] },
+        { name: "나른한시간", score: 28, members: ["젤리"] },
+        { name: "피어나는 동심", score: 28, members: ["젤리"] },
+
+        // 25점 항목 (브릴블리스 세부 꽃 개별화)
+        { name: "보랏빛 꿈 부용 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "맑은봉우리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "꾀꼬리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "아지랑이빛 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "달계곡 등나무 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "분홍안개 붓꽃 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "연지빛 개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "오렌지꿀 버베나 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "옥빛글라디올러스 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "주황불꽃 글라디올러스 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "진홍빛 납매 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "햇살개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "흑자색 개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "구름빛 아스틸베 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        { name: "벚꽃 온디시움 (브릴블리스)", score: 25, members: ["브릴블리스"] },
+        
+        { name: "우주 토끼 여행", score: 25, members: [] },
+        { name: "우주선 댕댕이", score: 25, members: [] },
+        { name: "구름 양", score: 25, members: ["방울이", "은짱"] },
+        { name: "스노우 씰 샤베트", score: 25, members: [] },
+        { name: "핑크 치즈 컵", score: 25, members: ["핑커루이스", "시아아아", "포포"] },
+        { name: "별빛레몬 토끼잔", score: 25, members: ["호령", "햄찌네", "핑커루이스", "브릴블리스"] },
+        { name: "바다색 꿈의 조개", score: 25, members: ["지호♡지우", "방울이"] },
+        { name: "수정빛나비의춤", score: 25, members: ["지호♡지우", "브릴블리스"] },
+        { name: "분홍빛 물결꽃", score: 25, members: ["시아아아", "브릴블리스"] },
+        { name: "수박 스위트덕", score: 25, members: ["시아아아", "진쫀"] },
+        { name: "조화로운 꽃", score: 25, members: ["시아아아"] },
+        { name: "불꽃심장 꿈조개", score: 25, members: ["시아아아"] },
+        { name: "학월성덩굴", score: 25, members: ["포포"] },
+        { name: "꽃밭지저귐", score: 25, members: ["포포"] },
+        { name: "곰보이스박스", score: 25, members: ["포포"] },
+        { name: "연분홍 환상벚꽃", score: 25, members: ["포포"] },
+        { name: "백자 환상벚꽃", score: 25, members: ["초록"] },
+        { name: "연보라 환상벚꽃", score: 25, members: ["은짱", "포포", "방울이"] },
+        { name: "오리", score: 25, members: ["초록", "은짱", "밀로"] },
+        { name: "햇살구름 양털", score: 25, members: ["초록", "방울이", "임솔", "시아아아", "밀로", "은짱", "지호♡지우"] },
+        { name: "모래성", score: 25, members: ["초록", "호령", "방울이", "포포", "밀로", "핑커루이스"] },
+        { name: "적염괴화", score: 25, members: ["초록", "포포", "시아아아", "핑커루이스", "방울이"] },
+        { name: "옥구슬목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시"] },
+        { name: "푸른안개모란", score: 25, members: ["초록", "밀로"] },
+        { name: "먹빛모란", score: 25, members: ["초록", "밀로", "햄찌네"] },
+        { name: "달빛모란", score: 25, members: ["밀로"] },
+        { name: "봄살구빛 옷자락", score: 25, members: ["밀로"] },
+        { name: "별그림자 수정", score: 25, members: ["초록", "포포", "호령"] },
+        { name: "스위트베리", score: 25, members: ["초록", "포포", "햄찌네", "은짱", "제시"] },
+        { name: "자색여운", score: 25, members: ["시아아아", "진쫀"] },
+        { name: "비령추단", score: 25, members: ["데이지"] },
+        { name: "구름 무지개편지", score: 25, members: ["호령"] },
+        { name: "맑은날의 노래무대", score: 25, members: ["임솔"] }
+    ];
+
+    let currentScoreFilter = 'all';
+
+    function renderList(items) {
+        const listContainer = document.getElementById("missionList");
+        listContainer.innerHTML = "";
+
+        if (items.length === 0) {
+            listContainer.innerHTML = "<p style='text-align:center; color:#adb5bd;'>검색 결과가 없습니다.</p>";
+            return;
+        }
+
+        items.forEach(item => {
+            const card = document.createElement("div");
+            card.className = `mission-card card-${item.score}`;
+
+            let memberBadges = "";
+            if (item.members.length > 0) {
+                item.members.forEach(member => {
+                    memberBadges += `<span class="member-badge">${member}</span>`;
+                });
+            } else {
+                memberBadges = `<span class="no-member">보유한 길드원이 없습니다.</span>`;
+            }
+
+            card.innerHTML = `
