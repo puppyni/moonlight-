@@ -70,8 +70,34 @@
         .score-28 { background: #fff4e6; color: var(--point-28); }
         .score-25 { background: #fff9db; color: var(--point-25); }
         .guild-members { display: flex; flex-wrap: wrap; gap: 6px; }
-        .member-badge { background: #f1f3f5; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem; border: 1px solid #e9ecef; }
+        .member-badge {
+            background: #f1f3f5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .member-badge:active {
+            background: #e2e6ea;
+            transform: scale(0.95);
+        }
         .no-member { color: #adb5bd; font-size: 0.85rem; font-style: italic; }
+        
+        /* 알림창 스타일 */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +112,7 @@
     </div>
     <div id="missionList" class="mission-list"></div>
 </div>
+<div id="toast" class="toast">호출 문구가 복사되었습니다!</div>
 <script>
     const data = [
         { name: "동화의 성", score: 30, members: ["멍냥", "젤리"] },
@@ -168,9 +195,16 @@
         items.forEach(item => {
             const card = document.createElement("div");
             card.className = `mission-card card-${item.score}`;
-            let memberBadges = item.members.length > 0 
-                ? item.members.map(m => `<span class="member-badge">${m}</span>`).join('')
-                : `<span class="no-member">보유한 길드원이 없습니다.</span>`;
+            
+            let memberBadges = "";
+            if (item.members.length > 0) {
+                item.members.forEach(member => {
+                    // 터치 시 호출 문구가 복사되도록 함수 연결
+                    memberBadges += `<span class="member-badge" onclick="copyCallMessage('${member}', '${item.name}')">👤 ${member}</span>`;
+                });
+            } else {
+                memberBadges = `<span class="no-member">보유한 길드원이 없습니다.</span>`;
+            }
 
             card.innerHTML = `
                 <div class="card-header">
@@ -183,6 +217,23 @@
         });
     }
 
+    // 📢 터치 시 자동 호출문구 복사 기능
+    function copyCallMessage(name, missionName) {
+        const message = `📢 @${name} 님! [ ${missionName} ] 임무 부탁드립니다! ✨`;
+        
+        const t = document.createElement("textarea");
+        document.body.appendChild(t);
+        t.value = message;
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+
+        const toast = document.getElementById("toast");
+        toast.innerText = `${name}님 호출 문구가 복사되었습니다!`;
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 1500);
+    }
+
     function filterMissions() {
         const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
         const filtered = data.filter(item => {
@@ -193,7 +244,6 @@
         renderList(filtered);
     }
 
-    // 모바일 터치 전용 필터 적용
     function filterScore(score, button) {
         currentScoreFilter = score;
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -201,10 +251,6 @@
         filterMissions();
     }
 
-    // 첫 실행 시 무조건 리스트 그리기
-    window.onload = function() {
-        renderList(data);
-    };
     renderList(data);
 </script>
 </body>
