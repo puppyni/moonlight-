@@ -9,15 +9,13 @@
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-color: #212529;
-            --accent-color: #495057;
             --point-30: #e63946;
             --point-28: #f77f00;
             --point-25: #fcbf49;
             --border-color: #dee2e6;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -26,20 +24,8 @@
             flex-direction: column;
             align-items: center;
         }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #343a40;
-        }
-
-        /* 검색창 */
+        .container { width: 100%; max-width: 600px; }
+        h1 { text-align: center; font-size: 1.5rem; margin-bottom: 20px; color: #343a40; }
         .search-box {
             width: 100%;
             padding: 12px;
@@ -49,45 +35,21 @@
             box-sizing: border-box;
             margin-bottom: 15px;
             outline: none;
-            transition: border-color 0.2s;
         }
-
-        .search-box:focus {
-            border-color: #4dabf7;
-        }
-
-        /* 필터 버튼 */
-        .filter-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
+        .filter-buttons { display: flex; gap: 8px; margin-bottom: 20px; width: 100%; }
         .filter-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid var(--border-color);
             background: white;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .filter-btn.active {
-            background: #343a40;
-            color: white;
-            border-color: #343a40;
-        }
-
-        /* 리스트 구조 */
-        .mission-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        .filter-btn.active { background: #343a40; color: white; border-color: #343a40; }
+        .mission-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .mission-card {
             background: var(--card-bg);
             border-left: 6px solid var(--border-color);
@@ -98,85 +60,37 @@
             flex-direction: column;
             gap: 8px;
         }
-
-        /* 점수별 테두리 색상 변화 */
         .card-30 { border-left-color: var(--point-30); }
         .card-28 { border-left-color: var(--point-28); }
         .card-25 { border-left-color: var(--point-25); }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .mission-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .mission-score {
-            font-size: 0.85rem;
-            padding: 3px 8px;
-            border-radius: 12px;
-            background: #e9ecef;
-            font-weight: bold;
-        }
-
+        .card-header { display: flex; justify-content: space-between; align-items: center; }
+        .mission-name { font-size: 1.1rem; font-weight: bold; }
+        .mission-score { font-size: 0.85rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
         .score-30 { background: #ffe3e3; color: var(--point-30); }
         .score-28 { background: #fff4e6; color: var(--point-28); }
         .score-25 { background: #fff9db; color: var(--point-25); }
-
-        .guild-members {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .member-badge {
-            background: #f1f3f5;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            border: 1px solid #e9ecef;
-        }
-
-        .no-member {
-            color: #adb5bd;
-            font-size: 0.85rem;
-            font-style: italic;
-        }
+        .guild-members { display: flex; flex-wrap: wrap; gap: 6px; }
+        .member-badge { background: #f1f3f5; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem; border: 1px solid #e9ecef; }
+        .no-member { color: #adb5bd; font-size: 0.85rem; font-style: italic; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>🌸 길드전 꽃 미션 호출기</h1>
-    
-    <!-- 검색 기능 -->
-    <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 일부나 미션명 검색 (예: 장미, 모란)..." onkeyup="filterMissions()">
-    
-    <!-- 점수 필터 버튼 -->
+    <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 일부나 미션명 검색..." oninput="filterMissions()">
     <div class="filter-buttons">
         <button class="filter-btn active" onclick="filterScore('all', this)">전체</button>
         <button class="filter-btn" onclick="filterScore('30', this)">30점</button>
         <button class="filter-btn" onclick="filterScore('28', this)">28점</button>
         <button class="filter-btn" onclick="filterScore('25', this)">25점</button>
     </div>
-
-    <!-- 미션 리스트 -->
     <div id="missionList" class="mission-list"></div>
 </div>
-
 <script>
-    // 꽃 세부 이름까지 모두 분리 및 매핑 완료된 데이터
     const data = [
-        // 30점 항목
         { name: "동화의 성", score: 30, members: ["멍냥", "젤리"] },
         { name: "사슴", score: 30, members: ["젤리", "무어올리에"] },
         { name: "꽃나무", score: 30, members: ["이드리즈", "멍냥"] },
-
-        // 28점 항목
         { name: "달토끼", score: 28, members: ["무어올리에"] },
         { name: "쌍둥이자리", score: 28, members: ["티티", "무어올리에"] },
         { name: "게자리", score: 28, members: ["티티", "무어올리에"] },
@@ -192,8 +106,6 @@
         { name: "별똥별", score: 28, members: ["데이지", "포포", "시아아아", "초록"] },
         { name: "나른한시간", score: 28, members: ["젤리"] },
         { name: "피어나는 동심", score: 28, members: ["젤리"] },
-
-        // 25점 항목 (브릴블리스 세부 꽃 개별화)
         { name: "보랏빛 꿈 부용 (브릴블리스)", score: 25, members: ["브릴블리스"] },
         { name: "맑은봉우리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
         { name: "꾀꼬리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
@@ -209,7 +121,6 @@
         { name: "흑자색 개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
         { name: "구름빛 아스틸베 (브릴블리스)", score: 25, members: ["브릴블리스"] },
         { name: "벚꽃 온디시움 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        
         { name: "우주 토끼 여행", score: 25, members: [] },
         { name: "우주선 댕댕이", score: 25, members: [] },
         { name: "구름 양", score: 25, members: ["방울이", "은짱"] },
@@ -250,23 +161,51 @@
     function renderList(items) {
         const listContainer = document.getElementById("missionList");
         listContainer.innerHTML = "";
-
         if (items.length === 0) {
-            listContainer.innerHTML = "<p style='text-align:center; color:#adb5bd;'>검색 결과가 없습니다.</p>";
+            listContainer.innerHTML = "<p style='text-align:center; color:#adb5bd; padding:20px;'>검색 결과가 없습니다.</p>";
             return;
         }
-
         items.forEach(item => {
             const card = document.createElement("div");
             card.className = `mission-card card-${item.score}`;
-
-            let memberBadges = "";
-            if (item.members.length > 0) {
-                item.members.forEach(member => {
-                    memberBadges += `<span class="member-badge">${member}</span>`;
-                });
-            } else {
-                memberBadges = `<span class="no-member">보유한 길드원이 없습니다.</span>`;
-            }
+            let memberBadges = item.members.length > 0 
+                ? item.members.map(m => `<span class="member-badge">${m}</span>`).join('')
+                : `<span class="no-member">보유한 길드원이 없습니다.</span>`;
 
             card.innerHTML = `
+                <div class="card-header">
+                    <span class="mission-name">${item.name}</span>
+                    <span class="mission-score score-${item.score}">${item.score}점</span>
+                </div>
+                <div class="guild-members">${memberBadges}</div>
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    function filterMissions() {
+        const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
+        const filtered = data.filter(item => {
+            const matchesSearch = item.name.toLowerCase().includes(searchInput);
+            const matchesScore = (currentScoreFilter === 'all') || (item.score.toString() === currentScoreFilter);
+            return matchesSearch && matchesScore;
+        });
+        renderList(filtered);
+    }
+
+    // 모바일 터치 전용 필터 적용
+    function filterScore(score, button) {
+        currentScoreFilter = score;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        filterMissions();
+    }
+
+    // 첫 실행 시 무조건 리스트 그리기
+    window.onload = function() {
+        renderList(data);
+    };
+    renderList(data);
+</script>
+</body>
+</html>
