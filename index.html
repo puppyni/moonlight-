@@ -199,7 +199,7 @@
             let memberBadges = "";
             if (item.members.length > 0) {
                 item.members.forEach(member => {
-                    // 터치 시 호출 문구가 복사되도록 함수 연결
+                    // 터치 시 호출 문구가 복사되도록 함수 연결 (사람 모양 👤 아이콘 포함)
                     memberBadges += `<span class="member-badge" onclick="copyCallMessage('${member}', '${item.name}')">👤 ${member}</span>`;
                 });
             } else {
@@ -217,9 +217,10 @@
         });
     }
 
-    // 📢 터치 시 자동 호출문구 복사 기능
+    // 🌟 카톡 호출 멘션이 무조건 작동하도록 완전히 바꾼 복사 로직!
     function copyCallMessage(name, missionName) {
-        const message = `📢 @${name} 님! [ ${missionName} ] 임무 부탁드립니다! ✨`;
+        // 맨 앞에 확성기(기호)를 빼고 @이름이 무조건 첫 글자로 오게 변경했습니다!
+        const message = `@${name} 님! [ ${missionName} ] 임무 부탁드립니다! ✨`;
         
         const t = document.createElement("textarea");
         document.body.appendChild(t);
