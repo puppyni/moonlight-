@@ -106,7 +106,7 @@
 <body>
 <div class="container">
     <h1>🌸 달빛정원 길드전 꽃 미션 호출기</h1>
-    <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 일부나 미션명 검색..." oninput="filterMissions()">
+    <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 또는 길드원 이름 검색..." oninput="filterMissions()">
     <div class="filter-buttons">
         <button class="filter-btn active" onclick="filterScore('all', this)">전체</button>
         <button class="filter-btn" onclick="filterScore('30', this)">30점</button>
@@ -151,7 +151,7 @@
         { name: "햇살개양귀비", score: 25, members: ["브릴 블리스"] },
         { name: "흑자색 개양귀비", score: 25, members: ["브릴 블리스"] },
         { name: "구름빛 아스틸베", score: 25, members: ["브릴 블리스"] },
-        { name: "벚꽃 온디시움", score: 25, members: ["브릴 BLISS"] },
+        { name: "벚꽃 온디시움", score: 25, members: ["브릴 블리스"] },
         { name: "처녀자리·블루스톤 가든 위스퍼", score: 25, members: ["멍냥", "방글", "이드리즈", "젤리", "데이지", "티티", "무어 올리에"] },
         { name: "옥구슬 목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시", "꽃소담", "이드리즈", "젤리", "라뒤레"] },
         { name: "푸른안개 모란", score: 25, members: ["초록", "밀로"] },
@@ -193,7 +193,7 @@
         { name: "진홍빛 납매", score: 25, members: ["브릴 블리스", "젤리"] },
         { name: "우주선 댕댕이", score: 25, members: ["브릴 블리스"] },
         
-        // 🔮 [보라색 배경 '기타' 분류 전원 매핑 목록]
+        // 🔮 [보라색 테두리 '기타' 분류 전원 매핑 목록]
         { name: "연분홍 페튜니아", score: "under", members: ["햄찌네", "제시", "파지온 렐레유니", "가브리엘", "루안루안", "지호♡지우", "라뒤레", "꽃등", "아루미", "윤구리", "임솔"] },
         { name: "붉은 벚꽃 달맞이꽃", score: "under", members: ["제시", "파지온 렐레유니", "라뒤레", "꽃등", "윤구리", "임솔"] },
         { name: "푸른빛 달맞이꽃", score: "under", members: ["제시", "라뒤레", "임솔"] },
@@ -273,6 +273,7 @@
     function filterMissions() {
         const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
         const filtered = data.filter(item => {
-            const matchesSearch = item.name.toLowerCase().includes(searchInput);
-            const matchesScore = (currentScoreFilter === 'all') || (item.score.toString() === currentScoreFilter);
-            return matchesSearch && matchesScore;
+            // 꽃 이름 매칭 검사
+            const matchesName = item.name.toLowerCase().includes(searchInput);
+            // 길드원 이름 배열 내에 검색어가 포함되어 있는지 검사
+            const matchesMember = item.members.some(m => m.toLowerCase().includes(searchInput));
