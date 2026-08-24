@@ -224,7 +224,7 @@
     function renderList(items) {
         const listContainer = document.getElementById("missionList");
         listContainer.innerHTML = "";
-        if (items.length === 0) {
+        if (!items || items.length === 0) {
             listContainer.innerHTML = "<p style='text-align:center; color:#adb5bd; padding:20px;'>검색 결과가 없습니다.</p>";
             return;
         }
@@ -233,7 +233,8 @@
             card.className = `mission-card card-${item.score}`;
             
             let memberBadges = "";
-            if (item.members.length > 0) {
+            // members 배열의 안전성 확보 검사
+            if (item.members && item.members.length > 0) {
                 item.members.forEach(member => {
                     memberBadges += `<span class="member-badge" onclick="copyCallMessage('${member}', '${item.name}')">👤 ${member}</span>`;
                 });
@@ -273,6 +274,5 @@
     function filterMissions() {
         const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
         const filtered = data.filter(item => {
-            const matchesName = item.name.toLowerCase().includes(searchInput);
-            const matchesMember = item.members.some(m => m.toLowerCase().includes(searchInput));
-            const matchesSearch = matchesName || matchesMember;
+            const matchesName = item.name && item.name.toLowerCase().includes(searchInput);
+            // 의도치 않은 undefined 에러 완전 차단 조치 (Optional Chaining 적용)
