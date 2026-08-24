@@ -12,6 +12,7 @@
             --point-30: #e63946;
             --point-28: #f77f00;
             --point-25: #fcbf49;
+            --point-under: #4ea8de;
             --border-color: #dee2e6;
         }
         body {
@@ -36,17 +37,19 @@
             margin-bottom: 15px;
             outline: none;
         }
-        .filter-buttons { display: flex; gap: 8px; margin-bottom: 20px; width: 100%; }
+        .filter-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; width: 100%; }
         .filter-btn {
             flex: 1;
-            padding: 10px;
+            min-width: 70px;
+            padding: 10px 5px;
             border: 1px solid var(--border-color);
             background: white;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             -webkit-tap-highlight-color: transparent;
+            text-align: center;
         }
         .filter-btn.active { background: #343a40; color: white; border-color: #343a40; }
         .mission-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
@@ -63,12 +66,14 @@
         .card-30 { border-left-color: var(--point-30); }
         .card-28 { border-left-color: var(--point-28); }
         .card-25 { border-left-color: var(--point-25); }
+        .card-under { border-left-color: var(--point-under); }
         .card-header { display: flex; justify-content: space-between; align-items: center; }
         .mission-name { font-size: 1.1rem; font-weight: bold; }
         .mission-score { font-size: 0.85rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
         .score-30 { background: #ffe3e3; color: var(--point-30); }
         .score-28 { background: #fff4e6; color: var(--point-28); }
         .score-25 { background: #fff9db; color: var(--point-25); }
+        .score-under { background: #e0f2fe; color: var(--point-under); }
         .guild-members { display: flex; flex-wrap: wrap; gap: 6px; }
         .member-badge {
             background: #f1f3f5;
@@ -107,6 +112,7 @@
         <button class="filter-btn" onclick="filterScore('30', this)">30점</button>
         <button class="filter-btn" onclick="filterScore('28', this)">28점</button>
         <button class="filter-btn" onclick="filterScore('25', this)">25점</button>
+        <button class="filter-btn" onclick="filterScore('under', this)">기타</button>
     </div>
     <div id="missionList" class="mission-list"></div>
 </div>
@@ -146,15 +152,21 @@
         { name: "흑자색 개양귀비", score: 25, members: ["브릴 블리스"] },
         { name: "구름빛 아스틸베", score: 25, members: ["브릴 블리스"] },
         { name: "벚꽃 온디시움", score: 25, members: ["브릴 블리스"] },
-        { name: "우주 토끼 여행", score: 25, members: ["햄찌네", "제시", "데이지", "밀로"] },
-        { name: "우주선 댕댕이", score: 25, members: ["브릴 블리스"] },
-        { name: "별빛 입맞춤 구름 양", score: 25, members: ["방울이", "은짱", "데이지", "초록", "밀로", "지호♡지우", "브릴 블리스"] },
-        { name: "스노우 씰 샤베트", score: 25, members: [] },
-        { name: "핑크 치즈 컵", score: 25, members: ["핑커루이스", "시아아아", "포포"] },
+        { name: "처녀자리·블루스톤 가든 위스퍼", score: 25, members: ["멍냥", "방글", "이드리즈", "젤리", "데이지", "티티", "무어 올리에"] },
+        { name: "옥구슬 목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시", "꽃소담", "이드리즈", "젤리", "라뒤레"] },
+        { name: "푸른안개 모란", score: 25, members: ["초록", "밀로"] },
+        { name: "봄 살구빛 옷자락", score: 25, members: ["밀로", "초록"] },
+        { name: "먹빛 모란", score: 25, members: ["초록", "밀로", "햄찌네", "데이지", "티티", "브릴 블리스"] },
+        { name: "달빛 모란", score: 25, members: ["밀로"] },
+        { name: "해변 오리의 시원한 여름", score: 25, members: ["초록", "은짱", "밀로"] },
+        { name: "골든 스프링", score: 25, members: ["진쫀", "햄찌네", "데이지", "제시", "라뒤레", "은짱", "지호♡지우", "핑커 루이스", "임솔", "방울이", "꽃등", "브릴 블리스", "밀로", "파지온 렐레유니", "가브리엘", "루안루안", "윤구리", "아루미"] },
+        { name: "햇살구름 양털", score: 25, members: ["초록", "방울이", "임솔", "시아아아", "밀로", "은짱", "지호♡지우", "젤리"] },
+        { name: "얕은 여울의 모래성", score: 25, members: ["초록", "호령", "방울이", "포포", "밀로", "핑커루이스"] },
+        { name: "별빛 입맞춤 구름 양", score: 25, members: ["방울이", "은짱", "데이지", "초록", "밀로", "지호♡지우", "브릴 블리스", "핑커 루이스"] },
         { name: "별빛 레몬 토끼잔", score: 25, members: ["호령", "햄찌네", "핑커루이스", "브릴 블리스", "데이지", "초록", "밀로"] },
-        { name: "바다색 꿈의 조개", score: 25, members: ["지호♡지우", "방울이"] },
-        { name: "수정빛 나비춤 장미", score: 25, members: ["지호♡지우", "브릴 블리스", "티티"] },
-        { name: "분홍빛 물결꽃", score: 25, members: ["시아아아", "브릴 블리스", "티티"] },
+        { name: "우주 토끼 여행", score: 25, members: ["햄찌네", "제시", "데이지", "밀로", "핑커 루이스", "꽃등"] },
+        { name: "분홍빛 생일잔치", score: 25, members: ["밀로"] },
+        { name: "귀염냥 연회", score: 25, members: ["진쫀", "햄찌네", "제시", "지호♡지우", "임솔", "방울이", "꽃등", "파지온 렐레유니", "가브리엘", "루안루안", "윤구리", "아루미"] },
         { name: "수박 스위트덕", score: 25, members: ["시아아아", "진쫀", "은짱", "임솔"] },
         { name: "조화로운 꽃", score: 25, members: ["시아아아"] },
         { name: "불꽃심장 꿈조개", score: 25, members: ["시아아아", "핑커루이스", "브릴 블리스"] },
@@ -164,23 +176,47 @@
         { name: "연분홍 환상벚꽃", score: 25, members: ["포포"] },
         { name: "백자 환상 벚꽃", score: 25, members: ["초록"] },
         { name: "연보라 환상 벚꽃", score: 25, members: ["은짱", "포포", "방울이"] },
-        { name: "해변 오리의 시원한 여름", score: 25, members: ["초록", "은짱", "밀로"] },
-        { name: "햇살구름 양털", score: 25, members: ["초록", "방울이", "임솔", "시아아아", "밀로", "은짱", "지호♡지우", "젤리"] },
-        { name: "얕은 여울의 모래성", score: 25, members: ["초록", "호령", "방울이", "포포", "밀로", "핑커루이스"] },
         { name: "적염 괴화", score: 25, members: ["초록", "포포", "시아아아", "핑커루이스", "방울이"] },
-        { name: "옥구슬 목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시", "꽃소담", "이드리즈", "젤리", "라뒤레"] },
-        { name: "푸른안개 모란", score: 25, members: ["초록", "밀로"] },
-        { name: "먹빛 모란", score: 25, members: ["초록", "밀로", "햄찌네", "데이지", "티티", "브릴 블리스"] },
-        { name: "달빛 모란", score: 25, members: ["밀로"] },
-        { name: "봄 살구빛 옷자락", score: 25, members: ["밀로", "초록"] },
         { name: "황소자리·풍요의 별그림", score: 25, members: ["초록", "포포", "호령", "멍냥", "이드리즈"] },
         { name: "심쿵 스위트 베리", score: 25, members: ["초록", "포포", "햄찌네", "은짱", "제시", "밀로"] },
-        { name: "자색 여운", score: 25, members: ["시아아아", "진쫀", "꽃소담", "티티"] },
-        { name: "비령추란", score: 25, members: ["데이지", "꽃소담", "방글", "초록", "방울이"] },
+        { name: "자색 여운", score: 25, members: ["시아아아", "진쫀", "꽃소담", "티티", "무어 올리에"] },
+        { name: "비령추란", score: 25, members: ["데이지", "꽃소담", "방글", "초록", "방울이", "무어 올리에"] },
         { name: "구름 무지개편지", score: 25, members: ["호령"] },
         { name: "맑은 날의 노래 무대", score: 25, members: ["임솔", "진쫀"] },
         { name: "황금 장미", score: 25, members: ["방글", "진쫀", "방울이"] },
-        { name: "홍운 납매", score: 25, members: ["꽃소담", "젤리", "무어 올리에"] }
+        { name: "홍운 납매", score: 25, members: ["꽃소담", "젤리", "무어 올리에"] },
+        { name: "분홍옥 부용", score: 25, members: ["초록"] },
+        { name: "수정빛 나비춤 장미", score: 25, members: ["지호♡지우", "브릴 블리스", "티티"] },
+        { name: "분홍빛 물결꽃", score: 25, members: ["시아아아", "브릴 블리스", "티티", "무어 올리에"] },
+        { name: "별빛 꿈의 방주", score: 25, members: ["무어 올리에"] },
+        { name: "핑크 치즈 컵", score: 25, members: ["핑커루이스", "시아아아", "포포"] },
+        { name: "진홍빛 납매", score: 25, members: ["브릴 블리스", "젤리"] },
+        { name: "우주선 댕댕이", score: 25, members: ["브릴 블리스"] },
+        
+        // 🔮 [보라색 배경 '기타' 분류 전원 매핑 목록]
+        { name: "연분홍 페튜니아", score: "under", members: ["햄찌네", "제시", "파지온 렐레유니", "가브리엘", "루안루안", "지호♡지우", "라뒤레", "꽃등", "아루미", "윤구리", "임솔"] },
+        { name: "붉은 벚꽃 달맞이꽃", score: "under", members: ["제시", "파지온 렐레유니", "라뒤레", "꽃등", "윤구리", "임솔"] },
+        { name: "푸른빛 달맞이꽃", score: "under", members: ["제시", "라뒤레", "임솔"] },
+        { name: "붉은노을 접시꽃", score: "under", members: ["제시"] },
+        { name: "진홍 벚꽃 나비장미", score: "under", members: ["파지온 렐레유니", "지호♡지우", "라뒤레", "윤구리"] },
+        { name: "우아한 보랏빛 알리움", score: "under", members: ["파지온 렐레유니", "가브리엘"] },
+        { name: "푸른 소철", score: "under", members: ["가브리엘", "루안루안", "아루미"] },
+        { name: "영롱한 얼음빛 납매", score: "under", members: ["루안루안", "꽃등", "윤구리"] },
+        { name: "베들레헴의 별", score: "under", members: ["루안루안"] },
+        { name: "연분홍 조팝나무", score: "under", members: ["루안루안"] },
+        { name: "노을빛 산호꽃", score: "under", members: ["루안루안"] },
+        { name: "브룬펠시아", score: "under", members: ["파지온 렐레유니", "가브리엘", "지호♡지우", "아루미", "윤구리"] },
+        { name: "타오르는 불꽃 레난테라", score: "under", members: ["파지온 렐레유니", "가브리엘"] },
+        { name: "연지빛 헬레보루스", score: "under", members: ["파지온 렐레유니", "라뒤레", "윤구리"] },
+        { name: "분홍 스파티필룸", score: "under", members: ["가브리엘"] },
+        { name: "연홍색 접시꽃", score: "under", members: ["가브리엘", "윤구리"] },
+        { name: "흑수정 달리아", score: "under", members: ["라뒤레"] },
+        { name: "먹술 아네모네", score: "under", members: ["라뒤레"] },
+        { name: "꿀처럼 부드러운 달맞이꽃", score: "under", members: ["아루미"] },
+        { name: "금서리 붓꽃", score: "under", members: ["아루미"] },
+        { name: "윤생 호랑가시나무", score: "under", members: ["아루미"] },
+        { name: "연지 무궁화", score: "under", members: ["아루미"] },
+        { name: "연지 아네모네", score: "under", members: ["윤구리"] }
     ];
 
     let currentScoreFilter = 'all';
@@ -205,10 +241,12 @@
                 memberBadges = `<span class="no-member">보유한 길드원이 없습니다.</span>`;
             }
 
+            const scoreText = item.score === 'under' ? '기타' : `${item.score}점`;
+
             card.innerHTML = `
                 <div class="card-header">
                     <span class="mission-name">${item.name}</span>
-                    <span class="mission-score score-${item.score}">${item.score}점</span>
+                    <span class="mission-score score-${item.score}">${scoreText}</span>
                 </div>
                 <div class="guild-members">${memberBadges}</div>
             `;
@@ -238,18 +276,3 @@
             const matchesSearch = item.name.toLowerCase().includes(searchInput);
             const matchesScore = (currentScoreFilter === 'all') || (item.score.toString() === currentScoreFilter);
             return matchesSearch && matchesScore;
-        });
-        renderList(filtered);
-    }
-
-    function filterScore(score, button) {
-        currentScoreFilter = score;
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        filterMissions();
-    }
-
-    renderList(data);
-</script>
-</body>
-</html>
