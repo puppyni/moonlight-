@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 길드전 꽃 미션 호출 도우미</title>
+    <title>🌸 달빛정원 길드전 꽃 미션 호출 도우미</title>
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -85,8 +85,6 @@
             transform: scale(0.95);
         }
         .no-member { color: #adb5bd; font-size: 0.85rem; font-style: italic; }
-        
-        /* 알림창 스타일 */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -102,7 +100,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>🌸 길드전 꽃 미션 호출기</h1>
+    <h1>🌸 달빛정원 길드전 꽃 미션 호출기</h1>
     <input type="text" id="searchInput" class="search-box" placeholder="꽃 이름 일부나 미션명 검색..." oninput="filterMissions()">
     <div class="filter-buttons">
         <button class="filter-btn active" onclick="filterScore('all', this)">전체</button>
@@ -116,71 +114,73 @@
 <script>
     const data = [
         { name: "동화의 성", score: 30, members: ["멍냥", "젤리"] },
-        { name: "사슴", score: 30, members: ["젤리", "무어올리에"] },
-        { name: "꽃나무", score: 30, members: ["이드리즈", "멍냥"] },
-        { name: "달토끼", score: 28, members: ["무어올리에"] },
-        { name: "쌍둥이자리", score: 28, members: ["티티", "무어올리에"] },
-        { name: "게자리", score: 28, members: ["티티", "무어올리에"] },
-        { name: "사자자리", score: 28, members: ["티티", "무어올리에", "방글", "초록", "방울이"] },
-        { name: "별의마녀", score: 28, members: ["방울이"] },
-        { name: "여름마녀", score: 28, members: ["꽃소담", "방글", "무어올리에"] },
+        { name: "푸른 사슴 그림자", score: 30, members: ["젤리", "무어 올리에", "이드리즈", "멍냥"] },
+        { name: "꽃나무 정원", score: 30, members: ["이드리즈", "멍냥", "젤리"] },
+        { name: "별을 쫓는 달토끼", score: 28, members: ["무어 올리에", "멍냥", "젤리", "이드리즈"] },
+        { name: "쌍둥이자리·성수쌍영", score: 28, members: ["티티", "무어 올리에", "멍냥", "이드리즈", "젤리"] },
+        { name: "게자리·물결치는 별무리", score: 28, members: ["티티", "무어 올리에", "멍냥", "이드리즈", "젤리"] },
+        { name: "사자자리·금관의 빛나는 정원", score: 28, members: ["티티", "무어 올리에", "방글", "초록", "방울이", "멍냥", "젤리", "브릴 블리스", "이드리즈"] },
+        { name: "별의 마녀", score: 28, members: ["방울이", "무어 올리에", "밀로"] },
+        { name: "파도 타는 여름 마녀", score: 28, members: ["꽃소담", "방글", "무어 올리에", "멍냥", "젤리", "이드리즈"] },
         { name: "꽃소담 (브릴블리스)", score: 28, members: ["꽃소담"] },
         { name: "방글 (브릴블리스)", score: 28, members: ["방글"] },
-        { name: "꽃무늬배", score: 28, members: ["꽃소담", "방글", "무어올리에", "제시"] },
-        { name: "구름빛사절", score: 28, members: ["은짱", "초록", "밀로", "임솔", "방울이"] },
-        { name: "음파", score: 28, members: ["진쫀", "방울이"] },
-        { name: "수정서리", score: 28, members: ["꽃소담", "햄찌네", "데이지", "티티", "방울이"] },
-        { name: "별똥별", score: 28, members: ["데이지", "포포", "시아아아", "초록"] },
-        { name: "나른한시간", score: 28, members: ["젤리"] },
-        { name: "피어나는 동심", score: 28, members: ["젤리"] },
-        { name: "보랏빛 꿈 부용 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "맑은봉우리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "꾀꼬리 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "아지랑이빛 장미 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "달계곡 등나무 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "분홍안개 붓꽃 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "연지빛 개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "오렌지꿀 버베나 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "옥빛글라디올러스 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "주황불꽃 글라디올러스 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "진홍빛 납매 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "햇살개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "흑자색 개양귀비 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "구름빛 아스틸베 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "벚꽃 온디시움 (브릴블리스)", score: 25, members: ["브릴블리스"] },
-        { name: "우주 토끼 여행", score: 25, members: [] },
-        { name: "우주선 댕댕이", score: 25, members: [] },
-        { name: "구름 양", score: 25, members: ["방울이", "은짱"] },
+        { name: "구름 조류 꽃무늬 배", score: 28, members: ["꽃소담", "방글", "무어 올리에", "제시", "멍냥", "젤리", "이드리즈"] },
+        { name: "구름빛 사절", score: 28, members: ["은짱", "초록", "밀로", "임솔", "방울이", "꽃소담", "멍냥", "방글", "이드리즈", "젤리"] },
+        { name: "여름 섬의 음파", score: 28, members: ["진쫀", "방울이", "꽃소담", "멍냥", "젤리", "이드리즈"] },
+        { name: "수정 서리의 아름다움", score: 28, members: ["꽃소담", "햄찌네", "데이지", "티티", "방울이", "멍냥", "방글", "이드리즈", "젤리", "초록"] },
+        { name: "별똥별의 향기", score: 28, members: ["데이지", "포포", "시아아아", "초록", "멍냥", "방글", "이드리즈"] },
+        { name: "나른한 시간", score: 28, members: ["젤리", "멍냥"] },
+        { name: "피어나는 동심", score: 28, members: ["젤리", "멍냥", "이드리즈"] },
+        { name: "보랏빛 꿈 부용", score: 25, members: ["브릴 블리스", "방울이"] },
+        { name: "맑은봉우리 장미", score: 25, members: ["브릴 블리스"] },
+        { name: "꾀꼬리 장미", score: 25, members: ["브릴 블리스"] },
+        { name: "아지랑이빛 장미", score: 25, members: ["브릴 블리스"] },
+        { name: "달계곡 등나무", score: 25, members: ["브릴 블리스"] },
+        { name: "분홍안개 붓꽃", score: 25, members: ["브릴 블리스"] },
+        { name: "연지빛 개양귀비", score: 25, members: ["브릴 블리스"] },
+        { name: "오렌지꿀 버베나", score: 25, members: ["브릴 블리스"] },
+        { name: "옥빛글라디올러스", score: 25, members: ["브릴 블리스"] },
+        { name: "주황불꽃 글라디올러스", score: 25, members: ["브릴 블리스"] },
+        { name: "진홍빛 납매", score: 25, members: ["브릴 블리스", "젤리"] },
+        { name: "햇살개양귀비", score: 25, members: ["브릴 블리스"] },
+        { name: "흑자색 개양귀비", score: 25, members: ["브릴 블리스"] },
+        { name: "구름빛 아스틸베", score: 25, members: ["브릴 블리스"] },
+        { name: "벚꽃 온디시움", score: 25, members: ["브릴 블리스"] },
+        { name: "우주 토끼 여행", score: 25, members: ["햄찌네", "제시", "데이지", "밀로"] },
+        { name: "우주선 댕댕이", score: 25, members: ["브릴 블리스"] },
+        { name: "별빛 입맞춤 구름 양", score: 25, members: ["방울이", "은짱", "데이지", "초록", "밀로", "지호♡지우", "브릴 블리스"] },
         { name: "스노우 씰 샤베트", score: 25, members: [] },
         { name: "핑크 치즈 컵", score: 25, members: ["핑커루이스", "시아아아", "포포"] },
-        { name: "별빛레몬 토끼잔", score: 25, members: ["호령", "햄찌네", "핑커루이스", "브릴블리스"] },
+        { name: "별빛 레몬 토끼잔", score: 25, members: ["호령", "햄찌네", "핑커루이스", "브릴 블리스", "데이지", "초록", "밀로"] },
         { name: "바다색 꿈의 조개", score: 25, members: ["지호♡지우", "방울이"] },
-        { name: "수정빛나비의춤", score: 25, members: ["지호♡지우", "브릴블리스"] },
-        { name: "분홍빛 물결꽃", score: 25, members: ["시아아아", "브릴블리스"] },
-        { name: "수박 스위트덕", score: 25, members: ["시아아아", "진쫀"] },
+        { name: "수정빛 나비춤 장미", score: 25, members: ["지호♡지우", "브릴 블리스", "티티"] },
+        { name: "분홍빛 물결꽃", score: 25, members: ["시아아아", "브릴 블리스", "티티"] },
+        { name: "수박 스위트덕", score: 25, members: ["시아아아", "진쫀", "은짱", "임솔"] },
         { name: "조화로운 꽃", score: 25, members: ["시아아아"] },
-        { name: "불꽃심장 꿈조개", score: 25, members: ["시아아아"] },
+        { name: "불꽃심장 꿈조개", score: 25, members: ["시아아아", "핑커루이스", "브릴 블리스"] },
         { name: "학월성덩굴", score: 25, members: ["포포"] },
         { name: "꽃밭지저귐", score: 25, members: ["포포"] },
         { name: "곰보이스박스", score: 25, members: ["포포"] },
         { name: "연분홍 환상벚꽃", score: 25, members: ["포포"] },
-        { name: "백자 환상벚꽃", score: 25, members: ["초록"] },
-        { name: "연보라 환상벚꽃", score: 25, members: ["은짱", "포포", "방울이"] },
-        { name: "오리", score: 25, members: ["초록", "은짱", "밀로"] },
-        { name: "햇살구름 양털", score: 25, members: ["초록", "방울이", "임솔", "시아아아", "밀로", "은짱", "지호♡지우"] },
-        { name: "모래성", score: 25, members: ["초록", "호령", "방울이", "포포", "밀로", "핑커루이스"] },
-        { name: "적염괴화", score: 25, members: ["초록", "포포", "시아아아", "핑커루이스", "방울이"] },
-        { name: "옥구슬목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시"] },
-        { name: "푸른안개모란", score: 25, members: ["초록", "밀로"] },
-        { name: "먹빛모란", score: 25, members: ["초록", "밀로", "햄찌네"] },
-        { name: "달빛모란", score: 25, members: ["밀로"] },
-        { name: "봄살구빛 옷자락", score: 25, members: ["밀로"] },
-        { name: "별그림자 수정", score: 25, members: ["초록", "포포", "호령"] },
-        { name: "스위트베리", score: 25, members: ["초록", "포포", "햄찌네", "은짱", "제시"] },
-        { name: "자색여운", score: 25, members: ["시아아아", "진쫀"] },
-        { name: "비령추단", score: 25, members: ["데이지"] },
+        { name: "백자 환상 벚꽃", score: 25, members: ["초록"] },
+        { name: "연보라 환상 벚꽃", score: 25, members: ["은짱", "포포", "방울이"] },
+        { name: "해변 오리의 시원한 여름", score: 25, members: ["초록", "은짱", "밀로"] },
+        { name: "햇살구름 양털", score: 25, members: ["초록", "방울이", "임솔", "시아아아", "밀로", "은짱", "지호♡지우", "젤리"] },
+        { name: "얕은 여울의 모래성", score: 25, members: ["초록", "호령", "방울이", "포포", "밀로", "핑커루이스"] },
+        { name: "적염 괴화", score: 25, members: ["초록", "포포", "시아아아", "핑커루이스", "방울이"] },
+        { name: "옥구슬 목련", score: 25, members: ["초록", "라뒤네", "햄찌네", "데이지", "밀로", "은짱", "꽃등", "제시", "꽃소담", "이드리즈", "젤리", "라뒤레"] },
+        { name: "푸른안개 모란", score: 25, members: ["초록", "밀로"] },
+        { name: "먹빛 모란", score: 25, members: ["초록", "밀로", "햄찌네", "데이지", "티티", "브릴 블리스"] },
+        { name: "달빛 모란", score: 25, members: ["밀로"] },
+        { name: "봄 살구빛 옷자락", score: 25, members: ["밀로", "초록"] },
+        { name: "황소자리·풍요의 별그림", score: 25, members: ["초록", "포포", "호령", "멍냥", "이드리즈"] },
+        { name: "심쿵 스위트 베리", score: 25, members: ["초록", "포포", "햄찌네", "은짱", "제시", "밀로"] },
+        { name: "자색 여운", score: 25, members: ["시아아아", "진쫀", "꽃소담", "티티"] },
+        { name: "비령추란", score: 25, members: ["데이지", "꽃소담", "방글", "초록", "방울이"] },
         { name: "구름 무지개편지", score: 25, members: ["호령"] },
-        { name: "맑은날의 노래무대", score: 25, members: ["임솔"] }
+        { name: "맑은 날의 노래 무대", score: 25, members: ["임솔", "진쫀"] },
+        { name: "황금 장미", score: 25, members: ["방글", "진쫀", "방울이"] },
+        { name: "홍운 납매", score: 25, members: ["꽃소담", "젤리", "무어 올리에"] }
     ];
 
     let currentScoreFilter = 'all';
@@ -199,7 +199,6 @@
             let memberBadges = "";
             if (item.members.length > 0) {
                 item.members.forEach(member => {
-                    // 터치 시 호출 문구가 복사되도록 함수 연결 (사람 모양 👤 아이콘 포함)
                     memberBadges += `<span class="member-badge" onclick="copyCallMessage('${member}', '${item.name}')">👤 ${member}</span>`;
                 });
             } else {
@@ -217,9 +216,7 @@
         });
     }
 
-    // 🌟 카톡 호출 멘션이 무조건 작동하도록 완전히 바꾼 복사 로직!
     function copyCallMessage(name, missionName) {
-        // 맨 앞에 확성기(기호)를 빼고 @이름이 무조건 첫 글자로 오게 변경했습니다!
         const message = `@${name} 님! [ ${missionName} ] 임무 부탁드립니다! ✨`;
         
         const t = document.createElement("textarea");
